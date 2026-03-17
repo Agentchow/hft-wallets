@@ -37,7 +37,7 @@ def load_wallet_for_bot(bot_key: str) -> dict:
     load_wallets()
 
     config_path = os.path.join(get_config_dir(), "wallet_config.json")
-    with open(config_path) as f:
+    with open(config_path, encoding="utf-8") as f:
         cfg = json.load(f)
     if bot_key not in cfg:
         raise KeyError(f"Bot {bot_key!r} not found in wallet_config.json")

@@ -37,13 +37,13 @@ def _config_path() -> str:
 def _load_config() -> dict:
     p = _config_path()
     if os.path.isfile(p):
-        with open(p) as f:
+        with open(p, encoding="utf-8") as f:
             return json.load(f)
     return {}
 
 
 def _save_config(config: dict) -> None:
-    with open(_config_path(), "w") as f:
+    with open(_config_path(), "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2)
         f.write("\n")
 
@@ -104,23 +104,23 @@ def cmd_init(_args: argparse.Namespace) -> None:
     wallets_path = os.path.join(d, "wallets.env")
     if not os.path.isfile(wallets_path):
         template = """\
-# ── Wallet Registry ──────────────────────────────────────
+# -- Wallet Registry -----------------------------------------
 KALSHI_WALLETS=main,sports_hft,beni_hft
 POLYMARKET_WALLETS=main,sports_hft,copy_hft
 
-# ── Kalshi: main ─────────────────────────────────────────
+# -- Kalshi: main --------------------------------------------
 KALSHI_MAIN_KEYID=
 KALSHI_MAIN_KEYFILE=keys/kalshi_main.pem
 
-# ── Kalshi: sports_hft ───────────────────────────────────
+# -- Kalshi: sports_hft --------------------------------------
 KALSHI_SPORTS_HFT_KEYID=
 KALSHI_SPORTS_HFT_KEYFILE=keys/kalshi_sports_hft.pem
 
-# ── Kalshi: beni_hft ─────────────────────────────────────
+# -- Kalshi: beni_hft ----------------------------------------
 KALSHI_BENI_HFT_KEYID=
 KALSHI_BENI_HFT_KEYFILE=keys/kalshi_beni_hft.pem
 
-# ── Polymarket: main ─────────────────────────────────────
+# -- Polymarket: main ----------------------------------------
 POLYMARKET_MAIN_PRIVATE_KEY=
 POLYMARKET_MAIN_API_KEY=
 POLYMARKET_MAIN_SECRET=
@@ -129,7 +129,7 @@ POLYMARKET_MAIN_FUNDER=
 POLYMARKET_MAIN_SIG_TYPE=2
 POLYMARKET_MAIN_RELAYER_API_KEY=
 
-# ── Polymarket: sports_hft ───────────────────────────────
+# -- Polymarket: sports_hft ----------------------------------
 POLYMARKET_SPORTS_HFT_PRIVATE_KEY=
 POLYMARKET_SPORTS_HFT_API_KEY=
 POLYMARKET_SPORTS_HFT_SECRET=
@@ -138,7 +138,7 @@ POLYMARKET_SPORTS_HFT_FUNDER=
 POLYMARKET_SPORTS_HFT_SIG_TYPE=2
 POLYMARKET_SPORTS_HFT_RELAYER_API_KEY=
 
-# ── Polymarket: copy_hft ─────────────────────────────────
+# -- Polymarket: copy_hft ------------------------------------
 POLYMARKET_COPY_HFT_PRIVATE_KEY=
 POLYMARKET_COPY_HFT_API_KEY=
 POLYMARKET_COPY_HFT_SECRET=
@@ -147,7 +147,7 @@ POLYMARKET_COPY_HFT_FUNDER=
 POLYMARKET_COPY_HFT_SIG_TYPE=2
 POLYMARKET_COPY_HFT_RELAYER_API_KEY=
 """
-        with open(wallets_path, "w") as f:
+        with open(wallets_path, "w", encoding="utf-8") as f:
             f.write(template)
         print(f"Created {wallets_path} (fill in your credentials)")
     else:
