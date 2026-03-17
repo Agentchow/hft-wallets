@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hft-wallets"
+version = "0.1.0"
+description = "Shared wallet configuration for HFT trading bots"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["python-dotenv>=1.0"]
+
+[project.scripts]
+hft-wallets = "hft_wallets.cli:main"
