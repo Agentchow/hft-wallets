@@ -166,6 +166,24 @@ POLYMARKET_COPY_HFT_RELAYER_API_KEY=
     print(f"  3. Run 'hft-wallets select' to assign wallets to bots")
 
 
+def _pretty_name(name: str) -> str:
+    return name.title()
+
+
+def _print_bot_assignments(config: dict, indent: str = "  ") -> None:
+    if not config:
+        print(f"{indent}(none)")
+        return
+    max_name = max(len(b) for b in config)
+    for bot, assignment in config.items():
+        parts = []
+        if "kalshi" in assignment:
+            parts.append(f"kalshi → {assignment['kalshi']}")
+        if "polymarket" in assignment:
+            parts.append(f"poly → {assignment['polymarket']}")
+        print(f"{indent}  {_pretty_name(bot):<{max_name + 2}} {' │ '.join(parts)}")
+
+
 def cmd_list(_args: argparse.Namespace) -> None:
     env = _load_env()
     kalshi = _valid_kalshi(env)
@@ -190,13 +208,8 @@ def cmd_list(_args: argparse.Namespace) -> None:
     print("╚══════════════════════════════════════╝")
     if not config:
         print("  (none -- run 'hft-wallets select' to assign)")
-    for bot, assignment in config.items():
-        parts = []
-        if "kalshi" in assignment:
-            parts.append(f"kalshi={assignment['kalshi']}")
-        if "polymarket" in assignment:
-            parts.append(f"polymarket={assignment['polymarket']}")
-        print(f"  {bot}: {', '.join(parts)}")
+    else:
+        _print_bot_assignments(config)
     print()
 
 
@@ -224,18 +237,15 @@ def cmd_select(_args: argparse.Namespace) -> None:
     print("╚══════════════════════════════════════╝")
     if not config:
         print("  (none)")
-    for bot, assignment in config.items():
-        parts = []
-        if "kalshi" in assignment:
-            parts.append(f"kalshi={assignment['kalshi']}")
-        if "polymarket" in assignment:
-            parts.append(f"polymarket={assignment['polymarket']}")
-        print(f"  {bot}: {', '.join(parts)}")
+    else:
+        _print_bot_assignments(config)
 
     # Edit existing bots
     for bot in list(config.keys()):
         assignment = config[bot]
-        print(f"\n╔══ {bot.upper()} {'═' * (33 - len(bot))}╗")
+        title = _pretty_name(bot)
+        pad = max(33 - len(title), 1)
+        print(f"\n╔══ {title} {'═' * pad}╗")
         if "kalshi" in assignment:
             w = _prompt_wallet(kalshi, assignment.get("kalshi", ""), "Kalshi wallet")
             if w:
@@ -259,7 +269,9 @@ def cmd_select(_args: argparse.Namespace) -> None:
             print(f"  '{name}' already exists (edit it above)")
             continue
         config[name] = {}
-        print(f"\n╔══ {name.upper()} {'═' * (33 - len(name))}╗")
+        title = _pretty_name(name)
+        pad = max(33 - len(title), 1)
+        print(f"\n╔══ {title} {'═' * pad}╗")
 
         print("  Does this bot need Kalshi? (y/n, default n)")
         try:
