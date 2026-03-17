@@ -5,7 +5,17 @@ Shared wallet configuration for HFT trading bots. Manages Kalshi and Polymarket 
 ## Install
 
 ```bash
-pip install git+https://github.com/Agentchow/hft-wallets.git
+pip3 install git+https://github.com/Agentchow/hft-wallets.git
+```
+
+If `hft-wallets` is not found after installing, add the Python scripts directory to your PATH (one-time setup):
+
+```bash
+# macOS
+echo 'export PATH="$PATH:$HOME/Library/Python/3.9/bin"' >> ~/.zshrc && source ~/.zshrc
+
+# Linux
+echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc && source ~/.bashrc
 ```
 
 ## First-time setup

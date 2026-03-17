@@ -235,7 +235,7 @@ def cmd_select(_args: argparse.Namespace) -> None:
     # Edit existing bots
     for bot in list(config.keys()):
         assignment = config[bot]
-        print(f"\n── {bot} {'─' * (34 - len(bot))}")
+        print(f"\n╔══ {bot.upper()} {'═' * (33 - len(bot))}╗")
         if "kalshi" in assignment:
             w = _prompt_wallet(kalshi, assignment.get("kalshi", ""), "Kalshi wallet")
             if w:
@@ -259,7 +259,7 @@ def cmd_select(_args: argparse.Namespace) -> None:
             print(f"  '{name}' already exists (edit it above)")
             continue
         config[name] = {}
-        print(f"\n── {name} {'─' * (34 - len(name))}")
+        print(f"\n╔══ {name.upper()} {'═' * (33 - len(name))}╗")
 
         print("  Does this bot need Kalshi? (y/n, default n)")
         try:
