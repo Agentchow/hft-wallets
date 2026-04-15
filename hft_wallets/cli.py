@@ -179,6 +179,8 @@ def _print_bot_assignments(config: dict, indent: str = "  ") -> None:
         parts = []
         if "kalshi" in assignment:
             parts.append(f"kalshi → {assignment['kalshi']}")
+        if "kalshi_spread" in assignment:
+            parts.append(f"kalshi_aux → {assignment['kalshi_spread']}")
         if "polymarket" in assignment:
             parts.append(f"poly → {assignment['polymarket']}")
         print(f"{indent}  {_pretty_name(bot):<{max_name + 2}} {' │ '.join(parts)}")
@@ -247,9 +249,22 @@ def cmd_select(_args: argparse.Namespace) -> None:
         pad = max(33 - len(title), 1)
         print(f"\n╔══ {title} {'═' * pad}╗")
         if "kalshi" in assignment:
-            w = _prompt_wallet(kalshi, assignment.get("kalshi", ""), "Kalshi wallet")
+            w = _prompt_wallet(kalshi, assignment.get("kalshi", ""), "Kalshi ML wallet")
             if w:
                 assignment["kalshi"] = w
+        if "kalshi_spread" in assignment:
+            w = _prompt_wallet(kalshi, assignment.get("kalshi_spread", ""), "Kalshi aux/spread wallet")
+            if w:
+                assignment["kalshi_spread"] = w
+        elif "kalshi" in assignment:
+            print("\n  Add a Kalshi aux/spread wallet? (y/n, default n)")
+            try:
+                if input("  ").strip().lower() in ("y", "yes"):
+                    w = _prompt_wallet(kalshi, "", "Kalshi aux/spread wallet")
+                    if w:
+                        assignment["kalshi_spread"] = w
+            except (EOFError, KeyboardInterrupt):
+                print()
         if "polymarket" in assignment:
             w = _prompt_wallet(poly, assignment.get("polymarket", ""), "Polymarket wallet")
             if w:
@@ -276,9 +291,17 @@ def cmd_select(_args: argparse.Namespace) -> None:
         print("  Does this bot need Kalshi? (y/n, default n)")
         try:
             if input("  ").strip().lower() in ("y", "yes"):
-                w = _prompt_wallet(kalshi, "", "Kalshi wallet")
+                w = _prompt_wallet(kalshi, "", "Kalshi ML wallet")
                 if w:
                     config[name]["kalshi"] = w
+                print("  Does this bot need a separate Kalshi aux/spread wallet? (y/n, default n)")
+                try:
+                    if input("  ").strip().lower() in ("y", "yes"):
+                        w = _prompt_wallet(kalshi, "", "Kalshi aux/spread wallet")
+                        if w:
+                            config[name]["kalshi_spread"] = w
+                except (EOFError, KeyboardInterrupt):
+                    print()
         except (EOFError, KeyboardInterrupt):
             print()
 
